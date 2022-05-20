@@ -2,22 +2,22 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import re
-import notify2
+import notify2 # only linux os
 import time
 from datetime import datetime
 
 
 
-#the begining program notification
+# the begining program notification
 notify2.init("starting jobs.py")
 n = notify2.Notification("starting jobs.py")
 n.show()
 
-#the keywords i'm wanting to search for (you can make them as input)
-keywords = ['cyber' , 'Cyber']
+# add the keywords that you want to search for (you can make them as an input)
+keywords = []
 #-------------------------------------
 
-#the waiting time until the next search (you can make it as input)
+# the waiting time until the next search (in seconds) (you can make it as an input)
 waiting = 600
 #-------------------------------------
 
@@ -27,18 +27,18 @@ places = list()
 times = list()
 
 
-#to make it run in headless mode
+# to make it run in headless mode
 options = Options()
 options.headless = True
 options.add_argument("--window-size=1920,1200")
 
-# the link
-url = 'https://www.ouedkniss.com/emploi_offres/1?regionIds=alger-16&sexe=sexe-1'
+# the link (you can make it as an input)
+url = 'https://www.ouedkniss.com/emploi_offres/1'
 
 
 while True :
 
-    #duration checking
+    # duration checking
     now = datetime.now() # the current time
     now = str(now)
 
@@ -70,16 +70,16 @@ while True :
     difference = 1440 * day_difference + 60 * hour_difference + minute_difference # the final difference
     print (str(difference) + '\n')
 
-    #open the url
+    # open the url
     driver = webdriver.Chrome(options=options)
     driver.get (url)
 
-    #get the source page
+    # get the source page
     soup = driver.page_source
 
     driver.quit()
 
-    #finding the jobs
+    # finding the jobs
     page = BeautifulSoup (soup , "lxml")
     jobs_tmp = page.find_all ('div' , class_ = 'row row--dense')
     jobs = list ()
@@ -110,7 +110,7 @@ while True :
     #--------------------------------------------------------------
         
         
-        #the date type in the job duration (minutes, hours ,days)
+        # the date type in the job duration (minutes, hours ,days)
         confirm = re.findall ('.*y a.*[0-9] (.*)' , duration)
         if len(confirm) == 0 :
             continue
@@ -118,7 +118,7 @@ while True :
         confirm = confirm.strip()
 
 
-        #checking if the job is ثxpired
+        # checking if the job is ثxpired
         if difference > 1439 :
             if confirm == 'jour' or confirm == 'jours' :
                 check = re.findall ('.*y a ([0-9]?).*', duration)
